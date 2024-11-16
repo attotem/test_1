@@ -1,0 +1,61 @@
+.clientPage {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  
+    .subtitle {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+  
+    .searchBar {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  
+    .clientTable {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+  
+      th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+  
+      th {
+        background-color: #f8f8f8;
+        font-weight: bold;
+      }
+    }
+  
+    .buttons {
+      display: flex;
+      gap: 10px;
+  
+      .button {
+        padding: 10px 20px;
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+  
+        &:hover {
+          background-color: #e0e0e0;
+        }
+      }
+    }
+  }
+  

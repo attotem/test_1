@@ -1,0 +1,76 @@
+.sidebar {
+  width: 250px;
+  height: 100vh; 
+  background-color: #333;
+  color: #fff;
+  transition: width 0.3s ease;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000; 
+}
+
+.collapsed {
+  width: 3.5rem;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 1rem;
+}
+
+.menu {
+  flex: 1;
+  padding-top: 2rem;
+}
+
+.menu ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.menuItem:hover {
+  background-color: #444;
+}
+
+.menuText {
+  margin-left: 10px;
+  display: inline-block;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.collapsed .menuText {
+  opacity: 0;
+  display: none;
+}
+
+.submenu {
+  padding-left: 1.5rem;
+  display: none;
+}
+
+.submenuItem {
+  padding: 0.5rem 0;
+  color: #ddd;
+  text-decoration: none;
+}
+
+.submenuItem:hover {
+  color: #fff;
+}
