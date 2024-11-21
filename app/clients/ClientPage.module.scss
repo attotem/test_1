@@ -1,61 +1,117 @@
 .clientPage {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    
-    .title {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 10px;
+  padding: 40px;
+  font-family: 'Poppins', Arial, sans-serif;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 15px;
+  }
+
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #6a11cb;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      background-color: #2575fc;
+      transform: scale(1.05);
     }
-  
-    .subtitle {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 20px;
+
+    &:active {
+      transform: scale(0.98);
     }
-  
-    .searchBar {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
+  }
+
+  .icon {
+    font-size: 18px;
+  }
+
+  .clientTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+
+    th, td {
+      padding: 15px;
+      text-align: left;
       border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
+      font-size: 15px;
     }
-  
-    .clientTable {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-  
-      th, td {
-        padding: 10px;
-        text-align: left;
-        border: 1px solid #ddd;
-      }
-  
-      th {
-        background-color: #f8f8f8;
-        font-weight: bold;
-      }
+
+    th {
+      color: rgb(0, 0, 0);
+      font-weight: bold;
     }
-  
-    .buttons {
-      display: flex;
-      gap: 10px;
-  
-      .button {
-        padding: 10px 20px;
-        background-color: #f8f8f8;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-  
-        &:hover {
-          background-color: #e0e0e0;
-        }
+
+    td {
+      background-color: #f9f9f9;
+    }
+
+    tr {
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #f1f1f1;
       }
     }
   }
-  
+
+  .actionButtons {
+    display: flex;
+    align-items: center;
+  }
+
+  .editIcon {
+    color: #3498db;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+    margin-right: 10px;
+
+    &:hover {
+      color: #2980b9;
+      transform: scale(1.2);
+    }
+
+    &:active {
+      transform: scale(1);
+    }
+  }
+
+  .deleteIcon {
+    color: #e74c3c;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+      color: #c0392b;
+      transform: scale(1.2);
+    }
+
+    &:active {
+      transform: scale(1);
+    }
+  }
+}
