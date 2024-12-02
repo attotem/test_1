@@ -1,8 +1,7 @@
-// components/Sidebar.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaBars, FaHome, FaTachometerAlt, FaTools } from "react-icons/fa";
+import { FaBars, FaHome, FaTachometerAlt, FaCar } from "react-icons/fa";
 import styles from "./Sidebar.module.scss";
 
 interface SidebarProps {
@@ -30,34 +29,27 @@ const Sidebar: React.FC<SidebarProps> = ({ onCollapse }) => {
           <li>
             <Link href="/">
               <div className={styles.menuItem}>
-                <FaHome /> <span className={styles.menuText}>Dashboard</span>
+                <FaHome className={styles.icon} />
+                <span className={styles.menuText}>Dashboard</span>
               </div>
             </Link>
           </li>
           <li>
             <Link href="/clients">
               <div className={styles.menuItem}>
-                <FaTachometerAlt /> <span className={styles.menuText}>Clients</span>
+                <FaTachometerAlt className={styles.icon} />
+                <span className={styles.menuText}>Clients</span>
               </div>
             </Link>
           </li>
-          {/* <li>
-            <div className={styles.menuItem}>
-              <FaTools /> <span className={styles.menuText}>Settings</span>
-            </div>
-            <ul className={styles.submenu}>
-              <li>
-                <Link href="/settings/profile">
-                  <div className={styles.submenuItem}>Profile</div>
-                </Link>
-              </li>
-              <li>
-                <Link href="/settings/preferences">
-                  <div className={styles.submenuItem}>Preferences</div>
-                </Link>
-              </li>
-            </ul>
-          </li> */}
+          <li>
+            <Link href="/cars">
+              <div className={styles.menuItem}>
+                <FaCar className={styles.icon} />
+                <span className={styles.menuText}>Cars</span>
+              </div>
+            </Link>
+          </li>
         </ul>
       </nav>
     </div>

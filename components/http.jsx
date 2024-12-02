@@ -1,14 +1,14 @@
 import Cookies from "js-cookie";
 
-const URLAuth = "http://194.26.232.68:8080/";
-const URL = "http://194.26.232.68:8000/";
+const URLAuth = "http://194.26.232.68/auth/";
+const URL = "http://194.26.232.68/api/";
 
 
 const fetchData = async (request) => {
   try {
     const token = Cookies.get("access_token"); 
     const response = await fetch(`${URL + request}`, {
-      method: "get",
+      method: "GET",
       headers: new Headers({
         "ngrok-skip-browser-warning": "69420",
         "Authorization": `Bearer ${token}`,
@@ -70,6 +70,7 @@ const sendPutData = async (request, data) => {
     return null;
   }
 };
+
 const sendDeleteData = async (request, data) => {
   try {
     const token = Cookies.get("access_token"); 
@@ -135,26 +136,6 @@ const sendDataSinJwt = async (request, data) => {
     }
 };
 
-const fetchDataSinJwt = async (request) => {
-  try {
-    const response = await fetch(`${URL + request}`, {
-      method: "get",
-      headers: new Headers({
-        "ngrok-skip-browser-warning": "69420",
-
-      }),
-      
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    console.log("data:", request, data);
-    return data;
-  } catch (error) {
-    return null;
-  }
-};
 
 export const login = async (data) => {
   const response = await sendDataSinJwt("token", {
@@ -165,7 +146,7 @@ export const login = async (data) => {
 };
 
 export const getUserClients = async () => {
-  const response = await fetchData("client/getUserClients");
+  const response = await fetchData("client/getProfileClients/");
   return response;
 };
 export const getClientById = async (client_id) => {
@@ -181,7 +162,7 @@ export const getAllSources  = async () => {
   return response;s
 };
 export const addClient = async (formData) => {
-  const response = await sendData("client/add",formData);
+  const response = await sendData("client/add/",formData);
   return response;
 };
 export const applyTags = async (formData) => {
@@ -202,5 +183,33 @@ export const removeTags = async (formData) => {
 };
 export const deleteClient = async (client_id) => {
   const response = await sendDeleteData(`client/delete/${client_id}/`);
+  return response;
+};
+
+
+
+export const getCars = async () => {
+  const response = await fetchData(`car/getProfileCars/`);
+  return response;
+};
+export const getAllClients = async () => {
+  const response = await fetchData(`client/getProfileClients/min/`);
+  return response;
+};
+export const deleteCar = async (car_id) => {
+  const response = await sendDeleteData(`car/delete/${car_id}`);
+  return response;
+};
+export const getCarById = async (car_id) => {
+  const response = await fetchData(`car/get/${car_id}/`);
+  return response;s
+};
+
+export const addCar = async (formData) => {
+  const response = await sendData("car/add/",formData);
+  return response;
+};
+export const updateCar = async (formData) => {
+  const response = await sendPatchData("car/update/",formData);
   return response;
 };
