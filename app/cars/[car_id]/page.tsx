@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { getCarById, updateCar, getAllClients } from "../../../components/http";  
-import { Paper, Typography, Box, Button, Stack, TextField, IconButton, Grid, Card, CardContent, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
-import { FaArrowLeft, FaEdit } from "react-icons/fa";
+import { Paper, Typography, Box, Button, Stack, TextField, IconButton, Grid, Card, CardContent, MenuItem, Select, InputLabel, FormControl, Avatar } from "@mui/material";
+import { FaArrowLeft, FaEdit, FaPlusCircle, FaPen, FaTrashAlt } from "react-icons/fa";
 import { SelectChangeEvent } from "@mui/material";
 import { useTranslation } from 'react-i18next';  
 
@@ -24,6 +24,8 @@ type Car = {
     id: string;
     fullname: string;
     phone_number?: string | null;
+    passport_number?: string | null;
+    email?: string | null;
   };
 };
 
@@ -134,7 +136,7 @@ const CarDetail: React.FC = () => {
   }
 
   return (
-    <Box sx={{ maxWidth: 1200, margin: "0 auto", padding: 4 }}>
+    <Box sx={{ margin: "0 auto", padding: 4 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ marginBottom: 3 }}>
         <IconButton onClick={() => router.push("/cars")} sx={{ color: "#663399" }}>
           <FaArrowLeft />
@@ -144,19 +146,20 @@ const CarDetail: React.FC = () => {
         </IconButton>
       </Stack>
 
-      <Paper
+      <Box
         sx={{
           padding: 4,
-          backgroundColor: "white",
           borderRadius: 5,
-          boxShadow: "0 12px 24px rgba(0, 0, 0, 0.2)",
         }}
       >
-        <Typography variant="h3" align="center" sx={{ marginBottom: 4, fontWeight: 600, color: "#663399" }}>
-          {t('car.Info.carInformation')}
-        </Typography>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between' }}>
+          <Button>{t('car.Info.carInformation')}</Button>
+          <Button>{t('car.Info.mileageHistory')}</Button>
+          <Button>{t('car.Info.orderSheet')}</Button>
+          <Button>{t('car.Info.reminder')}</Button>
+        </Box>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} sx={{ marginTop: 4 }}>
           <Grid item xs={12} sm={6}>
             <Card
               variant="outlined"
@@ -169,19 +172,6 @@ const CarDetail: React.FC = () => {
               <CardContent>
                 {!isEditing ? (
                   <>
-                    <Typography variant="h6" sx={{ color: "#333", fontWeight: 500 }}>
-                      {t('car.Info.client')}:
-                    </Typography>
-                    <Typography variant="body1" sx={{ marginBottom: 3 }}>
-                      {car.client ? (
-                        <Link href={`/clients/client/${car.client.id}`} style={{ color: "#663399", textDecoration: "none" }}>
-                          {car.client.fullname}
-                        </Link>
-                      ) : (
-                        t('notSpecified')
-                      )}
-                    </Typography>
-
                     <Typography variant="h6" sx={{ color: "#333", fontWeight: 500 }}>
                       {t('car.Info.manufacturer')}:
                     </Typography>
@@ -212,22 +202,6 @@ const CarDetail: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <FormControl fullWidth sx={{ marginBottom: 3 }}>
-                      <InputLabel id="client-select-label">{t('car.Info.client')}</InputLabel>
-                      <Select
-                        labelId="client-select-label"
-                        value={car.client?.id || ""}
-                        onChange={handleSelectChange}
-                        label={t('car.Info.client')}
-                      >
-                        {clients.map((client) => (
-                          <MenuItem key={client.id} value={client.id}>
-                            {client.fullname}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
                     <TextField
                       label={t('car.Info.manufacturer')}
                       name="manufacturer"
@@ -278,57 +252,70 @@ const CarDetail: React.FC = () => {
               <CardContent>
                 {!isEditing ? (
                   <>
-                    <Typography variant="h6" sx={{ color: "#333", fontWeight: 500 }}>
-                      {t('car.Info.yearOfManufacture')}:
-                    </Typography>
-                    <Typography variant="body1" sx={{ marginBottom: 3 }}>
-                      {car.year || t('car.Info.notSpecified')}
-                    </Typography>
-
-                    <Typography variant="h6" sx={{ color: "#333", fontWeight: 500 }}>
-                      {t('car.Info.mileage')}:
-                    </Typography>
-                    <Typography variant="body1" sx={{ marginBottom: 3 }}>
-                      {car.mileage ? `${car.mileage} км` : t('car.Info.notSpecified')}
-                    </Typography>
-
-                    <Typography variant="h6" sx={{ color: "#333", fontWeight: 500 }}>
-                      {t('car.Info.note')}:
-                    </Typography>
-                    <Typography variant="body1" sx={{ marginBottom: 3 }}>
-                      {car.note || t('car.Info.noNote')}
-                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
+                      <Avatar sx={{ marginRight: 2 }}>{car.client?.fullname.charAt(0)}</Avatar>
+                      <Box>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                          {car.client?.fullname} <span style={{ fontSize: "0.875em", color: "#666" }}>{t('car.Info.owner')}</span>
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: "#333" }}>
+                          {car.client?.phone_number || t('car.Info.notSpecified')}
+                        </Typography>
+                      </Box>
+                      <IconButton sx={{ marginLeft: 'auto', color: 'green' }}>
+                        <FaPen />
+                      </IconButton>
+                      <IconButton sx={{ color: 'red' }}>
+                        <FaTrashAlt />
+                      </IconButton>
+                    </Box>
                   </>
                 ) : (
                   <>
-                    <TextField
-                      label={t('car.Info.yearOfManufacture')}
-                      name="year"
-                      value={car.year?.toString() || ""}
-                      onChange={handleInputChange}
-                      fullWidth
-                      type="number"
-                      sx={{ marginBottom: 3 }}
-                    />
-                    <TextField
-                      label={t('car.Info.mileage')}
-                      name="mileage"
-                      value={car.mileage?.toString() || ""}
-                      onChange={handleInputChange}
-                      fullWidth
-                      type="number"
-                      sx={{ marginBottom: 3 }}
-                    />
-                    <TextField
-                      label={t('car.Info.note')}
-                      name="note"
-                      value={car.note || ""}
-                      onChange={handleInputChange}
-                      fullWidth
-                      multiline
-                      rows={3}
-                      sx={{ marginBottom: 3 }}
-                    />
+                    <FormControl fullWidth sx={{ marginBottom: 3 }}>
+                      <InputLabel id="client-select-label">{t('car.Info.client')}</InputLabel>
+                      <Select
+                        labelId="client-select-label"
+                        value={car.client?.id || ""}
+                        onChange={handleSelectChange}
+                        label={t('car.Info.client')}
+                      >
+                        {clients.map((client) => (
+                          <MenuItem key={client.id} value={client.id}>
+                            {client.fullname}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    {car.client && (
+                      <>
+                        <TextField
+                          label={t('car.Info.phoneNumber')}
+                          name="phone_number"
+                          value={car.client.phone_number || ""}
+                          onChange={handleInputChange}
+                          fullWidth
+                          sx={{ marginBottom: 3 }}
+                        />
+                        <TextField
+                          label={t('car.Info.passportNumber')}
+                          name="passport_number"
+                          value={car.client.passport_number || ""}
+                          onChange={handleInputChange}
+                          fullWidth
+                          sx={{ marginBottom: 3 }}
+                        />
+                        <TextField
+                          label={t('car.Info.email')}
+                          name="email"
+                          value={car.client.email || ""}
+                          onChange={handleInputChange}
+                          fullWidth
+                          sx={{ marginBottom: 3 }}
+                        />
+                      </>
+                    )}
                   </>
                 )}
               </CardContent>
@@ -353,7 +340,7 @@ const CarDetail: React.FC = () => {
             {t('car.Info.saveChanges')}
           </Button>
         )}
-      </Paper>
+      </Box>
     </Box>
   );
 };
