@@ -3,6 +3,10 @@ import Cookies from "js-cookie";
 const URLAuth = "http://194.26.232.68/auth/";
 const URL = "http://194.26.232.68/api/";
 
+const handleUnauthorized = () => {
+  // Redirect to login page if user is unauthorized
+  window.location.href = "/login";
+};
 
 const fetchData = async (request) => {
   try {
@@ -15,9 +19,15 @@ const fetchData = async (request) => {
       }),
     });
 
+    if (response.status === 401) {
+      handleUnauthorized();
+      return;
+    }
+
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
+    
     const data = await response.json();
     console.log("data:", request, data);
     return data;
@@ -39,6 +49,11 @@ const sendPatchData = async (request, data) => {
       },
       body: JSON.stringify(data),
     });
+
+    if (response.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const result = await response.json();
     console.log("post:", request, result);
@@ -62,6 +77,11 @@ const sendPutData = async (request, data) => {
       body: JSON.stringify(data),
     });
 
+    if (response.status === 401) {
+      handleUnauthorized();
+      return;
+    }
+
     const result = await response.json();
     console.log("post:", request, result);
     return result;
@@ -83,6 +103,11 @@ const sendDeleteData = async (request, data) => {
       },
       body: JSON.stringify(data),
     });
+
+    if (response.status === 401) {
+      handleUnauthorized();
+      return;
+    }
 
     const result = await response.json();
     console.log("post:", request, result);
@@ -106,6 +131,11 @@ const sendData = async (request, data) => {
       body: JSON.stringify(data),
     });
 
+    if (response.status === 401) {
+      handleUnauthorized();
+      return;
+    }
+
     const result = await response.json();
     console.log("post:", request, result);
     return result;
@@ -116,25 +146,30 @@ const sendData = async (request, data) => {
 };
 
 const sendDataSinJwt = async (request, data) => {
-    try {
-      const formattedRequest = request.endsWith('/') ? request : `${request}`;  
-      const response = await fetch(`${URLAuth}${formattedRequest}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        //   "Authorization": `Bearer ${hash}`,
-  
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await response.json();
-      console.log('post:', request, result);
-      return result;
-    } catch (error) {
-      console.error('Error fetching:', error);
-      return null;
+  try {
+    const formattedRequest = request.endsWith('/') ? request : `${request}`;  
+    const response = await fetch(`${URLAuth}${formattedRequest}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.status === 401) {
+      handleUnauthorized();
+      return;
     }
+
+    const result = await response.json();
+    console.log('post:', request, result);
+    return result;
+  } catch (error) {
+    console.error('Error fetching:', error);
+    return null;
+  }
 };
+
 
 
 export const login = async (data) => {
@@ -145,71 +180,98 @@ export const login = async (data) => {
   return response;
 };
 
+const client = "clients";
+const car = "cars";
+const employee = "employees";
+
 export const getUserClients = async () => {
-  const response = await fetchData("client/getProfileClients/");
+  const response = await fetchData(`${client}/getTenantClients/`);
   return response;
 };
 export const getClientById = async (client_id) => {
-  const response = await fetchData(`client/get/${client_id}/`);
+  const response = await fetchData(`${client}/get/${client_id}/`);
   return response;s
 };
 export const getAllTags = async () => {
-  const response = await fetchData(`client/tags/getAll/`);
+  const response = await fetchData(`${client}/tags/getAll/`);
   return response;s
 };
 export const getAllSources  = async () => {
-  const response = await fetchData(`client/sources/getAll/`);
+  const response = await fetchData(`${client}/sources/getAll/`);
   return response;s
 };
 export const addClient = async (formData) => {
-  const response = await sendData("client/add/",formData);
+  const response = await sendData(`${client}/add/`,formData);
   return response;
 };
 export const applyTags = async (formData) => {
-  const response = await sendData("client/tags/apply/",formData);
+  const response = await sendData(`${client}/tags/apply/`,formData);
   return response;
 };
 export const addTag = async (formData) => {
-  const response = await sendData("client/tags/add/",formData);
+  const response = await sendData(`${client}/tags/add/`,formData);
   return response;
 };
 export const updateClient = async (formData) => {
-  const response = await sendPatchData("client/update/",formData);
+  const response = await sendPatchData(`${client}/update/`,formData);
   return response;
 };
 export const removeTags = async (formData) => {
-  const response = await sendPutData("client/tags/remove/",formData);
+  const response = await sendPutData(`${client}/tags/remove/`,formData);
   return response;
 };
 export const deleteClient = async (client_id) => {
-  const response = await sendDeleteData(`client/delete/${client_id}/`);
+  const response = await sendDeleteData(`${client}/delete/${client_id}/`);
+  return response;
+};
+export const getAllClients = async () => {
+  const response = await fetchData(`${client}/getTenantClients/min/`);
   return response;
 };
 
 
 
 export const getCars = async () => {
-  const response = await fetchData(`car/getProfileCars/`);
+  const response = await fetchData(`${car}/getTenantCars/`);
   return response;
 };
-export const getAllClients = async () => {
-  const response = await fetchData(`client/getProfileClients/min/`);
-  return response;
-};
+
 export const deleteCar = async (car_id) => {
-  const response = await sendDeleteData(`car/delete/${car_id}`);
+  const response = await sendDeleteData(`${car}/delete/${car_id}`);
   return response;
 };
 export const getCarById = async (car_id) => {
-  const response = await fetchData(`car/get/${car_id}/`);
+  const response = await fetchData(`${car}/get/${car_id}/`);
   return response;s
 };
 
 export const addCar = async (formData) => {
-  const response = await sendData("car/add/",formData);
+  const response = await sendData(`${car}/add/`,formData);
   return response;
 };
 export const updateCar = async (formData) => {
-  const response = await sendPatchData("car/update/",formData);
+  const response = await sendPatchData(`${car}/update/`,formData);
+  return response;
+};
+
+
+export const getEmployeeById = async (employee_id) => {
+  const response = await fetchData(`${employee}/get/${employee_id}/`);
+  return response;
+};
+export const getTenantEmployees = async () => {
+  const response = await fetchData(`${employee}/getTenantEmployees/`);
+  return response;
+};
+export const getTenantPosts = async () => {
+  const response = await fetchData(`${employee}/posts/getTenantPosts/`);
+  return response;
+};
+export const addEmployee = async (formData) => {
+  const response = await sendData(`${employee}/add/`,formData);
+  return response;
+};
+export const addPost = async (formData) => {
+  const response = await sendData(`${employee}/posts/add/`,formData);
   return response;
 };

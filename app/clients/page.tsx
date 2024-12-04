@@ -1,15 +1,14 @@
-"use client";
+"use client"
 
 import React, { useState, useEffect } from "react";
-import { getUserClients, deleteClient } from "../../components/http";
-import { useRouter } from "next/navigation";
-import { FaTrash } from "react-icons/fa";
-import { Chip } from "@mui/material";
+import { getUserClients, deleteClient, applyTags, removeTags, getAllTags } from "../../components/http";
+import { FaTrash, FaExternalLinkAlt } from "react-icons/fa"; // Добавляем иконку для перехода
 import TableTemplate from "../../components/TableTemplate/TableTemplate";
 import ClientAddPopup from "./ClientAddPopup";
 import Header from "../../components/header/header";
+import TagSelector from "./TagSelector";
 import { useTranslation } from "react-i18next";
-
+import { Box } from "@mui/material";
 type Client = {
   id: string;
   fullname: string;
@@ -30,46 +29,66 @@ type Client = {
   }[];
 };
 
+type Tag = {
+  id: string;
+  name: string;
+  colour: string;
+};
+
 const ClientsPage: React.FC = () => {
   const { t } = useTranslation("common");
   const [clients, setClients] = useState<Client[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const router = useRouter();
 
   const fetchClients = async () => {
     try {
       const fetchedClients: Record<string, Client> = await getUserClients();
-      if (fetchedClients) {
-        setClients(Object.values(fetchedClients));
-      } else {
-        console.error(t("client.List.noData"));
-      }
+      setClients(Object.values(fetchedClients));
     } catch (error) {
-      console.error(t("client.List.errorFetchingClients"), error);
+      console.error("Error fetching clients:", error);
+    }
+  };
+
+  const fetchTags = async () => {
+    try {
+      const fetchedTags = await getAllTags();
+      setTags(fetchedTags);
+    } catch (error) {
+      console.error("Error fetching tags:", error);
     }
   };
 
   useEffect(() => {
     fetchClients();
+    fetchTags();
   }, []);
 
   const handleDeleteClient = async (id: string) => {
-    const confirmation = confirm(t("client.List.confirmDelete"));
+    const confirmation = confirm("Are you sure you want to delete this client?");
     if (!confirmation) return;
 
     try {
       await deleteClient(id);
       setClients((prevClients) => prevClients.filter((client) => client.id !== id));
-      alert(t("client.List.successfullyDeleted"));
+      alert("Client successfully deleted!");
     } catch (error) {
-      console.error(t("client.List.errorDeletingClient"), error);
-      alert(t("client.List.deleteError"));
+      console.error("Error deleting client:", error);
     }
   };
 
-  const handlePopupClose = () => {
-    setIsPopupOpen(false);
-    fetchClients();
+  const handleApplyTags = async (clientId: string, tagsToAdd: string[], tagsToRemove: string[]) => {
+    try {
+      if (tagsToAdd.length > 0) {
+        await applyTags([{ client_id: clientId, tags_ids: tagsToAdd }]);
+      }
+      if (tagsToRemove.length > 0) {
+        await removeTags([{ client_id: clientId, tags_ids: tagsToRemove }]);
+      }
+      fetchClients();
+    } catch (error) {
+      console.error("Error applying tags:", error);
+    }
   };
 
   const headers = [
@@ -80,52 +99,56 @@ const ClientsPage: React.FC = () => {
     t("client.List.cars"),
   ];
 
-  const renderRow = (client: Client) => (
-    <tr key={client.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/clients/client/${client.id}`)}>
-      <td>
-        {client.fullname || t("client.List.notSpecified")}
-        <div>
-          {client.tags &&
-            client.tags.map((tag) => (
-              <Chip
-                key={tag.id}
-                label={tag.name}
-                sx={{
-                  backgroundColor: tag.colour,
-                  color: "#fff",
-                  marginRight: "5px",
-                  marginTop: "5px",
-                  fontWeight: "bold",
-                }}
-                size="small"
-              />
-            ))}
-        </div>
-      </td>
-      <td>{client.phone_number || t("client.List.notSpecified")}</td>
-      <td>{client.passport_number || t("client.List.notSpecified")}</td>
-      <td>{client.source ? client.source.join(", ") : t("client.List.notSpecified")}</td>
-      <td>
-        {client.cars && client.cars.length > 0
-          ? client.cars.map((car) => `${car.manufacturer} ${car.model} (${car.reg_number})`).join(", ")
-          : t("client.List.noCars")}
-      </td>
-      <td>
-        <FaTrash
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDeleteClient(client.id);
-          }}
-          style={{ color: "red", cursor: "pointer" }}
-          title={t("client.List.delete")}
-        />
-      </td>
-    </tr>
-  );
+  const renderRow = (client: Client) => {
+    const [isEditingTags, setIsEditingTags] = useState(false);
+    const clientTags = client.tags || [];
+
+    return (
+      <tr key={client.id} style={{ position: "relative" }}>
+        <td>
+          {client.fullname || "Not specified"}
+          <TagSelector
+            clientId={client.id}
+            availableTags={tags}
+            selectedTags={client.tags || []}
+            onApplyTags={(tagsToAdd, tagsToRemove) => {
+              handleApplyTags(client.id, tagsToAdd, tagsToRemove);
+            }}
+            onClose={() => setIsEditingTags(false)}
+            editable={isEditingTags}
+            setEditable={setIsEditingTags}
+          />
+        </td>
+
+        <td>{client.phone_number || "Not specified"}</td>
+        <td>{client.passport_number || "Not specified"}</td>
+        <td>{client.source?.join(", ") || "Not specified"}</td>
+        <td>
+          {client.cars?.length
+            ? client.cars.map((car) => `${car.manufacturer} ${car.model}`).join(", ")
+            : "No cars"}
+        </td>
+        <td>
+          <Box display="flex" gap="10px" alignItems="center">
+            {/* Иконка удаления */}
+            <FaTrash
+              style={{ color: "red", cursor: "pointer" }}
+              onClick={() => handleDeleteClient(client.id)}
+            />
+            {/* Иконка перехода на страницу клиента */}
+            <FaExternalLinkAlt
+              style={{ color: "blue", cursor: "pointer" }}
+              onClick={() => window.location.href = `/clients/client/${client.id}`} 
+            />
+          </Box>
+        </td>
+      </tr>
+    );
+  };
 
   return (
     <>
-      <Header title={t("client.List.title")} onAddClick={() => setIsPopupOpen(true)} />
+      <Header title="Clients List" onAddClick={() => setIsPopupOpen(true)} />
       <TableTemplate
         headers={headers}
         data={clients}
@@ -133,7 +156,7 @@ const ClientsPage: React.FC = () => {
         title={t("client.List.title")}
         addPath="#"
       />
-      <ClientAddPopup open={isPopupOpen} onClose={() => setIsPopupOpen(false)} onClientAdded={handlePopupClose} />
+      <ClientAddPopup open={isPopupOpen} onClose={() => setIsPopupOpen(false)} onClientAdded={fetchClients} />
     </>
   );
 };

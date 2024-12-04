@@ -154,9 +154,7 @@ const CarDetail: React.FC = () => {
       >
         <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between' }}>
           <Button>{t('car.Info.carInformation')}</Button>
-          <Button>{t('car.Info.mileageHistory')}</Button>
-          <Button>{t('car.Info.orderSheet')}</Button>
-          <Button>{t('car.Info.reminder')}</Button>
+          <Button>{t('car.Info.history')}</Button>
         </Box>
 
         <Grid container spacing={4} sx={{ marginTop: 4 }}>
@@ -262,12 +260,6 @@ const CarDetail: React.FC = () => {
                           {car.client?.phone_number || t('car.Info.notSpecified')}
                         </Typography>
                       </Box>
-                      <IconButton sx={{ marginLeft: 'auto', color: 'green' }}>
-                        <FaPen />
-                      </IconButton>
-                      <IconButton sx={{ color: 'red' }}>
-                        <FaTrashAlt />
-                      </IconButton>
                     </Box>
                   </>
                 ) : (
@@ -287,35 +279,6 @@ const CarDetail: React.FC = () => {
                         ))}
                       </Select>
                     </FormControl>
-
-                    {car.client && (
-                      <>
-                        <TextField
-                          label={t('car.Info.phoneNumber')}
-                          name="phone_number"
-                          value={car.client.phone_number || ""}
-                          onChange={handleInputChange}
-                          fullWidth
-                          sx={{ marginBottom: 3 }}
-                        />
-                        <TextField
-                          label={t('car.Info.passportNumber')}
-                          name="passport_number"
-                          value={car.client.passport_number || ""}
-                          onChange={handleInputChange}
-                          fullWidth
-                          sx={{ marginBottom: 3 }}
-                        />
-                        <TextField
-                          label={t('car.Info.email')}
-                          name="email"
-                          value={car.client.email || ""}
-                          onChange={handleInputChange}
-                          fullWidth
-                          sx={{ marginBottom: 3 }}
-                        />
-                      </>
-                    )}
                   </>
                 )}
               </CardContent>
