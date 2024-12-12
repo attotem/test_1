@@ -49,6 +49,7 @@
       "errorLoadingClients": "Error loading clients"
     }
   },
+
   "client": {
     "Info": {
         "title": "Client Information",
@@ -113,6 +114,35 @@
       "errorOccurred": "An error occurred while saving the client.",
       "errorFetchingData": "Error fetching form data:"
     }
-  }
+  },
 
+  "employee": {
+    "Add": {
+      "title": "Add Employee",
+      "fullname": "Full Name",
+      "post": "Position",
+      "newPostName": "New Position Name",
+      "addPostTitle": "Add New Position",
+      "addPostButton": "Add Position",
+      "save": "Save",
+      "cancel": "Cancel",
+      "successMessage": "Employee added successfully.",
+      "postAddedSuccessfully": "Position added successfully.",
+      "errorAddingPost": "Error adding position.",
+      "errorSavingPost": "Could not save the position.",
+      "errorLoadingPosts": "Error loading positions.",
+      "errorAddingEmployee": "Error adding employee.",
+      "errorSavingEmployee": "Could not save the employee.",
+      "emptyPostName": "Position name cannot be empty."
+    },
+    "List": {
+      "title": "Employee List",
+      "fullname": "Full Name",
+      "post": "Position",
+      "delete": "Delete",
+      "deletedSuccessfully": "Employee deleted successfully.",
+      "deleteError": "Error deleting employee.",
+      "notSpecified": "Not specified"
+    }
+}
 }

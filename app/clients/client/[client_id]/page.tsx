@@ -310,7 +310,7 @@ const EditClient: React.FC = () => {
                       {t("client.Info.source")}:
                     </Typography>
                     <Typography variant="body1" sx={{ marginBottom: 3 }}>
-                      {client.source.length > 0 ? client.source[0] : t("client.Info.notSpecified")}
+                      {client.source?.length > 0 ? client.source[0] : t("client.Info.notSpecified")}
                     </Typography>
 
                     <Typography variant="h6" sx={{ color: "#333", fontWeight: 500 }}>

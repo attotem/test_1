@@ -4,7 +4,6 @@ const URLAuth = "http://194.26.232.68/auth/";
 const URL = "http://194.26.232.68/api/";
 
 const handleUnauthorized = () => {
-  // Redirect to login page if user is unauthorized
   window.location.href = "/login";
 };
 
@@ -183,6 +182,7 @@ export const login = async (data) => {
 const client = "clients";
 const car = "cars";
 const employee = "employees";
+const workOrders = "workOrders";
 
 export const getUserClients = async () => {
   const response = await fetchData(`${client}/getTenantClients/`);
@@ -237,7 +237,7 @@ export const getCars = async () => {
 };
 
 export const deleteCar = async (car_id) => {
-  const response = await sendDeleteData(`${car}/delete/${car_id}`);
+  const response = await sendDeleteData(`${car}/delete/${car_id}/`);
   return response;
 };
 export const getCarById = async (car_id) => {
@@ -267,11 +267,25 @@ export const getTenantPosts = async () => {
   const response = await fetchData(`${employee}/posts/getTenantPosts/`);
   return response;
 };
-export const addEmployee = async (formData) => {
+export const addTenantEmployee = async (formData) => {
   const response = await sendData(`${employee}/add/`,formData);
+  return response;
+};
+export const deleteTenantEmployee = async (employee_id) => {
+  const response = await sendDeleteData(`${employee}/delete/${employee_id}/`);
   return response;
 };
 export const addPost = async (formData) => {
   const response = await sendData(`${employee}/posts/add/`,formData);
+  return response;
+};
+
+
+export const getCarWorkOrders = async (car_id) => {
+  const response = await fetchData(`${workOrders}/getCarWorkOrders/?car_id=${car_id}`);
+  return response;
+};
+export const getWorkOrderById = async (work_order_id) => {
+  const response = await fetchData(`${workOrders}/get/${work_order_id}/`);
   return response;
 };

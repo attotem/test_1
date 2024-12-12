@@ -130,12 +130,10 @@ const ClientsPage: React.FC = () => {
         </td>
         <td>
           <Box display="flex" gap="10px" alignItems="center">
-            {/* Иконка удаления */}
             <FaTrash
               style={{ color: "red", cursor: "pointer" }}
               onClick={() => handleDeleteClient(client.id)}
             />
-            {/* Иконка перехода на страницу клиента */}
             <FaExternalLinkAlt
               style={{ color: "blue", cursor: "pointer" }}
               onClick={() => window.location.href = `/clients/client/${client.id}`} 

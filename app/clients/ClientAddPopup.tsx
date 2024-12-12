@@ -84,8 +84,11 @@ const ClientAddPopup: React.FC<ClientAddPopupProps> = ({ open, onClose, onClient
         source: [clientFields.source],
         custom_params: {},
       });
-
-      if (response?.client_id) {
+      
+      //ПРИДУМАТЬ 
+      
+      
+      if (response?.client_id) {   
         const clientId = response.client_id;
 
         if (selectedTags.length > 0) {
