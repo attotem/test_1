@@ -67,7 +67,7 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ car, isEditing, onClientChange,
             <InputLabel>Client</InputLabel>
             <Select
               value={car.client?.id || ""}
-              onChange={(event) => onClientChange(event.target.value)}
+              onChange={(event) => onClientChange(event.target.value)} 
             >
               {clients.map((client) => (
                 <MenuItem key={client.id} value={client.id}>
@@ -108,3 +108,4 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ car, isEditing, onClientChange,
 };
 
 export default ClientInfo;
+

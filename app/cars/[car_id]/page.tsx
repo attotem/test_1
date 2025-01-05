@@ -7,6 +7,7 @@ import {
   updateCar,
   getAllClients,
   getCarWorkOrders,
+  addWorkOrder
 } from "../../../components/http";
 import {
   Box,
@@ -25,7 +26,8 @@ import { FaArrowLeft, FaEdit } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import CarInfo from "./CarInfo";
 import ClientInfo from "./ClientInfo";
-
+import AddWorkOrderPopup from "./AddWorkOrderPopup";
+import WorkOrderHistory from "./WorkOrderHistory";
 type Car = {
   id: string;
   manufacturer: string;
@@ -61,42 +63,46 @@ const CarDetail: React.FC = () => {
   const [workOrders, setWorkOrders] = useState<any[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"details" | "history">("details");
+  const [isPopupOpen, setIsPopupOpen] = useState(true);
+
+
+  const fetchCar = async () => {
+    try {
+      const normalizedCarId = Array.isArray(car_id) ? car_id[0] : car_id;
+      if (!normalizedCarId) {
+        console.error("Invalid car ID");
+        return;
+      }
+
+      const fetchedCar: Car = await getCarById(normalizedCarId);
+      setCar(fetchedCar);
+      setInitialCar(fetchedCar);
+    } catch (error) {
+      console.error("Error fetching car:", error);
+    }
+  };
+
+  const fetchClients = async () => {
+    try {
+      const fetchedClients: Client[] = await getAllClients();
+      setClients(fetchedClients);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+    }
+  };
+
+  const fetchWorkOrders = async () => {
+    try {
+      const fetchedOrders = await getCarWorkOrders(car_id);
+      setWorkOrders(fetchedOrders);
+    } catch (error) {
+      console.error("Error fetching work orders:", error);
+    }
+  };
+
 
   useEffect(() => {
-    const fetchCar = async () => {
-      try {
-        const normalizedCarId = Array.isArray(car_id) ? car_id[0] : car_id;
-        if (!normalizedCarId) {
-          console.error("Invalid car ID");
-          return;
-        }
-
-        const fetchedCar: Car = await getCarById(normalizedCarId);
-        setCar(fetchedCar);
-        setInitialCar(fetchedCar);
-      } catch (error) {
-        console.error("Error fetching car:", error);
-      }
-    };
-
-    const fetchClients = async () => {
-      try {
-        const fetchedClients: Client[] = await getAllClients();
-        setClients(fetchedClients);
-      } catch (error) {
-        console.error("Error fetching clients:", error);
-      }
-    };
-
-    const fetchWorkOrders = async () => {
-      try {
-        const fetchedOrders = await getCarWorkOrders(car_id);
-        setWorkOrders(fetchedOrders);
-      } catch (error) {
-        console.error("Error fetching work orders:", error);
-      }
-    };
-
+    
     fetchCar();
     fetchClients();
     fetchWorkOrders();
@@ -107,19 +113,27 @@ const CarDetail: React.FC = () => {
   const handleSave = async () => {
     if (car && initialCar) {
       try {
-        const changedFields: Partial<Car> = {};
+        const changedFields: Record<string, any> = {};
+  
         Object.keys(car).forEach((key) => {
           if ((car as any)[key] !== (initialCar as any)[key]) {
-            changedFields[key as keyof Car] = (car as any)[key];
+            if (key === "client" && car.client) {
+              changedFields["client_id"] = car.client.id; 
+            } else {
+              changedFields[key] = (car as any)[key];
+            }
           }
         });
-
+  
         if (Object.keys(changedFields).length === 0) {
           alert(t("noChangesToSave"));
           return;
         }
-
-        await updateCar({ car_id: car.id, values: changedFields });
+          await updateCar({
+          car_id: car.id,
+          values: changedFields,
+        });
+  
         setIsEditing(false);
         alert(t("dataUpdatedSuccessfully"));
       } catch (error) {
@@ -128,6 +142,7 @@ const CarDetail: React.FC = () => {
       }
     }
   };
+  
 
   if (!car) {
     return <div>{t("loadingCarInfo")}</div>;
@@ -209,23 +224,16 @@ const CarDetail: React.FC = () => {
         </>
       )}
 
-      {activeTab === "history" && (
-        <Box>
-          <Typography variant="h6" sx={{ marginBottom: 2 }}>
-            {t("workOrderHistory")}
-          </Typography>
-          <List>
-            {workOrders.map((order) => (
-              <ListItem key={order.id} sx={{ borderBottom: "1px solid #ccc" }}>
-                <ListItemText
-                  primary={`${t("issuedOn")}: ${order.issued_on}, ${t("status")}: ${order.status}`}
-                  secondary={`${t("comment")}: ${order.comment}`}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      )}
+      {activeTab === "history" && <WorkOrderHistory workOrders={workOrders} onAddClick ={() => setIsPopupOpen(true)} />}
+
+      <AddWorkOrderPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        onSaveSuccess={() => {
+          fetchWorkOrders();
+        }}
+      />
+
     </Box>
   );
 };

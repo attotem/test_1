@@ -289,3 +289,7 @@ export const getWorkOrderById = async (work_order_id) => {
   const response = await fetchData(`${workOrders}/get/${work_order_id}/`);
   return response;
 };
+export const addWorkOrder = async (formData) => {
+  const response = await sendData(`${workOrders}/add/`,formData);
+  return response;
+};

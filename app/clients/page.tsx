@@ -106,7 +106,7 @@ const ClientsPage: React.FC = () => {
     return (
       <tr key={client.id} style={{ position: "relative" }}>
         <td>
-          {client.fullname || "Not specified"}
+          {client.fullname || "-"}
           <TagSelector
             clientId={client.id}
             availableTags={tags}
@@ -120,13 +120,13 @@ const ClientsPage: React.FC = () => {
           />
         </td>
 
-        <td>{client.phone_number || "Not specified"}</td>
-        <td>{client.passport_number || "Not specified"}</td>
-        <td>{client.source?.join(", ") || "Not specified"}</td>
+        <td>{client.phone_number || "-"}</td>
+        <td>{client.passport_number || "-"}</td>
+        <td>{client.source?.join(", ") || "-"}</td>
         <td>
           {client.cars?.length
             ? client.cars.map((car) => `${car.manufacturer} ${car.model}`).join(", ")
-            : "No cars"}
+            : "-"}
         </td>
         <td>
           <Box display="flex" gap="10px" alignItems="center">
