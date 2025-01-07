@@ -183,9 +183,10 @@ const client = "clients";
 const car = "cars";
 const employee = "employees";
 const workOrders = "workOrders";
+const services = "services";
 
 export const getUserClients = async () => {
-  const response = await fetchData(`${client}/getTenantClients/`);
+  const response = await fetchData(`${client}/get/all/`);
   return response;
 };
 export const getClientById = async (client_id) => {
@@ -193,46 +194,49 @@ export const getClientById = async (client_id) => {
   return response;s
 };
 export const getAllTags = async () => {
-  const response = await fetchData(`${client}/tags/getAll/`);
+  const response = await fetchData(`${client}/tags/get/all/`);
   return response;s
 };
 export const getAllSources  = async () => {
-  const response = await fetchData(`${client}/sources/getAll/`);
+  const response = await fetchData(`${client}/sources/get/all/`);
   return response;s
 };
 export const addClient = async (formData) => {
   const response = await sendData(`${client}/add/`,formData);
   return response;
 };
-export const applyTags = async (formData) => {
-  const response = await sendData(`${client}/tags/apply/`,formData);
-  return response;
-};
-export const addTag = async (formData) => {
-  const response = await sendData(`${client}/tags/add/`,formData);
-  return response;
-};
-export const updateClient = async (formData) => {
-  const response = await sendPatchData(`${client}/update/`,formData);
-  return response;
-};
-export const removeTags = async (formData) => {
-  const response = await sendPutData(`${client}/tags/remove/`,formData);
-  return response;
-};
-export const deleteClient = async (client_id) => {
-  const response = await sendDeleteData(`${client}/delete/${client_id}/`);
-  return response;
-};
+
+    export const applyTags = async (formData) => {
+      const response = await sendData(`${client}/tags/apply/`,formData);
+      return response;
+    };
+    export const addTag = async (formData) => {
+      const response = await sendData(`${client}/tags/add/`,formData);
+      return response;
+    };
+    export const updateClient = async (formData) => {
+      const response = await sendPatchData(`${client}/update/`,formData);
+      return response;
+    };
+    export const removeTags = async (formData) => {
+      const response = await sendData(`${client}/tags/remove/`,formData);
+      return response;
+    };
+    export const deleteClient = async (client_id) => {
+      const response = await sendDeleteData(`${client}/delete/${client_id}/`);
+      return response;
+    };
+
 export const getAllClients = async () => {
   const response = await fetchData(`${client}/getTenantClients/min/`);
   return response;
 };
 
+////////////////////////////////////////////////////////////////////////
 
 
 export const getCars = async () => {
-  const response = await fetchData(`${car}/getTenantCars/`);
+  const response = await fetchData(`${car}/get/all/`);
   return response;
 };
 
@@ -253,18 +257,14 @@ export const updateCar = async (formData) => {
   const response = await sendPatchData(`${car}/update/`,formData);
   return response;
 };
-
+////////////////////////////////////////////////////////////////////////
 
 export const getEmployeeById = async (employee_id) => {
   const response = await fetchData(`${employee}/get/${employee_id}/`);
   return response;
 };
 export const getTenantEmployees = async () => {
-  const response = await fetchData(`${employee}/getTenantEmployees/`);
-  return response;
-};
-export const getTenantPosts = async () => {
-  const response = await fetchData(`${employee}/posts/getTenantPosts/`);
+  const response = await fetchData(`${employee}/get/all/`);
   return response;
 };
 export const addTenantEmployee = async (formData) => {
@@ -275,10 +275,16 @@ export const deleteTenantEmployee = async (employee_id) => {
   const response = await sendDeleteData(`${employee}/delete/${employee_id}/`);
   return response;
 };
-export const addPost = async (formData) => {
-  const response = await sendData(`${employee}/posts/add/`,formData);
-  return response;
-};
+
+    export const getTenantPosts = async () => {
+      const response = await fetchData(`${employee}/posts/get/all/`);
+      return response;
+    };
+
+    export const addPost = async (formData) => {
+      const response = await sendData(`${employee}/posts/add/`,formData);
+      return response;
+    };
 
 
 export const getCarWorkOrders = async (car_id) => {
@@ -291,5 +297,21 @@ export const getWorkOrderById = async (work_order_id) => {
 };
 export const addWorkOrder = async (formData) => {
   const response = await sendData(`${workOrders}/add/`,formData);
+  return response;
+};
+////////////////////////////////////////////////////////////////////////
+
+export const getAllServices = async () => {
+  const response = await fetchData(`${services}/get/all/`);
+  return response;
+};
+
+export const addService = async (formData) => {
+  const response = await sendData(`${services}/add/`,formData);
+  return response;
+};
+
+export const deleteService = async (service_id) => {
+  const response = await sendDeleteData(`${services}/delete/${service_id}/`);
   return response;
 };

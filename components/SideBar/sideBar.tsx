@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaBars, FaHome, FaUsers, FaUserTie, FaCarSide } from "react-icons/fa";
+import { FaBars, FaHome, FaUsers, FaUserTie, FaCarSide,FaWrench   } from "react-icons/fa";
 import styles from "./Sidebar.module.scss";
 
 interface SidebarProps {
@@ -55,6 +55,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onCollapse }) => {
               <div className={styles.menuItem}>
                 <FaUserTie className={styles.icon} />
                 <span className={styles.menuText}>Employees</span>
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link href="/services">
+              <div className={styles.menuItem}>
+                <FaWrench   className={styles.icon} />
+                <span className={styles.menuText}>Services</span>
               </div>
             </Link>
           </li>
