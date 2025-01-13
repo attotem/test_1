@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -12,6 +10,7 @@ import Pagination from "../../components/Pagination/Pagination"
 import CarAddPopup from "./CarAddPopup";
 import { useTranslation } from "react-i18next";
 
+// sfasfas 
 type Car = {
   id: string;
   manufacturer: string;
