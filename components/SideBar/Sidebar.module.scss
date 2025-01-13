@@ -20,7 +20,7 @@
 .toggleButton {
   background: none;
   border: none;
-  color: #555;
+  color: #f4f3f2;
   font-size: 24px;
   cursor: pointer;
   padding: 1.2rem;
@@ -28,7 +28,7 @@
 }
 
 .toggleButton:hover {
-  color: #007bff; 
+  color: #007bff;
 }
 
 .menu {
@@ -39,13 +39,15 @@
 .menu ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
+  display: contents;
 }
 
 .menuItem {
   display: flex;
   align-items: center;
   padding: 1rem;
-  color: #F4F3F2;
+  color: #f4f3f2;
   text-decoration: none;
   border-radius: 8px;
   transition: background 0.3s, box-shadow 0.3s;
@@ -69,30 +71,105 @@
   opacity: 0;
   margin-left: 0;
   width: 0;
+  display: none;
 }
 
 .icon {
-  font-size: 1.5rem; 
-  margin-right: 10px; 
+  font-size: 1.5rem;
+  margin-right: 10px;
   transition: margin-right 0.3s ease, font-size 0.3s ease;
 }
 
 .collapsed .icon {
-  margin-right: 0; 
+  margin-right: 0;
 }
 
 .submenu {
+  list-style: none;
   padding-left: 1.5rem;
-  display: none;
+  margin: 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.submenu.open {
+  max-height: 200px; 
+  opacity: 1;
 }
 
 .submenuItem {
-  padding: 0.5rem 0;
-  color: #666;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  color: #f4f3f2;
   text-decoration: none;
-  transition: color 0.3s;
+  border-radius: 8px;
+  transition: background 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: #f1f4f8;
+    color: #663399;
+  }
 }
 
-.submenuItem:hover {
-  color: #663399;
+.submenuItem .icon {
+  font-size: 1.2rem; 
+  margin-right: 10px;
 }
+
+.submenuItem .menuText {
+  margin-left: 15px;
+  display: inline-block;
+  opacity: 1;
+  font-size: 0.9rem; 
+  transition: opacity 0.3s ease, margin-left 0.3s ease;
+}
+.serviceContainer{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.addWorkOrder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #374151; 
+  color: #e5e7eb; 
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.addButton:hover {
+  background-color: #4b5563; 
+}
+
+.addButton:active {
+  background-color: #6b7280; 
+  transform: scale(0.98);
+}
+
+.addButton:focus {
+  outline: 2px solid #6b7280;
+  outline-offset: 2px;
+}
+
+.addIcon {
+  font-size: 1rem;
+}
+

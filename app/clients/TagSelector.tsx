@@ -128,7 +128,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({
             </Box>
           ))
         ) : (
-          <span>No tags</span>
+          <span></span>
         )}
       </Box>
 

@@ -82,15 +82,6 @@ const CarDetail: React.FC = () => {
     }
   };
 
-  const fetchClients = async () => {
-    try {
-      const fetchedClients: Client[] = await getAllClients();
-      setClients(fetchedClients);
-    } catch (error) {
-      console.error("Error fetching clients:", error);
-    }
-  };
-
   const fetchWorkOrders = async () => {
     try {
       const fetchedOrders = await getCarWorkOrders(car_id);
@@ -104,7 +95,6 @@ const CarDetail: React.FC = () => {
   useEffect(() => {
     
     fetchCar();
-    fetchClients();
     fetchWorkOrders();
   }, [car_id]);
 
@@ -197,7 +187,6 @@ const CarDetail: React.FC = () => {
                     return { ...prev, client: selectedClient };
                   })
                 }
-                clients={clients}
               />
             </Grid>
           </Grid>

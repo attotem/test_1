@@ -1,7 +1,15 @@
 import React from "react";
-import { Card, CardContent, FormControl, InputLabel, MenuItem, Select, Typography, Avatar, Box, IconButton } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Avatar,
+  Box,
+  IconButton,
+} from "@mui/material";
 import { FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
+import ClientSearchSelect from "@/components/Search/ClientSearchSelect";
 
 type Car = {
   id: string;
@@ -23,19 +31,13 @@ type Car = {
   } | null;
 };
 
-type Client = {
-  id: string;
-  fullname: string;
-};
-
 type ClientInfoProps = {
   car: Car;
   isEditing: boolean;
   onClientChange: (clientId: string) => void;
-  clients: Client[];
 };
 
-const ClientInfo: React.FC<ClientInfoProps> = ({ car, isEditing, onClientChange, clients }) => {
+const ClientInfo: React.FC<ClientInfoProps> = ({ car, isEditing, onClientChange }) => {
   return (
     <Card
       variant="outlined"
@@ -63,19 +65,10 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ car, isEditing, onClientChange,
 
       <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
         {isEditing ? (
-          <FormControl fullWidth>
-            <InputLabel>Client</InputLabel>
-            <Select
-              value={car.client?.id || ""}
-              onChange={(event) => onClientChange(event.target.value)} 
-            >
-              {clients.map((client) => (
-                <MenuItem key={client.id} value={client.id}>
-                  {client.fullname}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <ClientSearchSelect
+            placeholder="Search for a client" 
+            onClientSelect={(clientId) => onClientChange(clientId)} 
+          />
         ) : (
           <>
             <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 1 }}>
@@ -108,4 +101,3 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ car, isEditing, onClientChange,
 };
 
 export default ClientInfo;
-

@@ -1,20 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { addCar, getAllClients } from "../../components/http";
+import React, { useState } from "react";
+import { addCar } from "../../components/http";
 import {
   Modal,
   Box,
   Typography,
   Stack,
   TextField,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
   Button,
 } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material";
+import ClientSearchSelect from "@/components/Search/ClientSearchSelect";
 import { useTranslation } from "react-i18next";
 
 type NewCar = {
@@ -27,12 +23,6 @@ type NewCar = {
   note: string | null;
   mileage: number | null;
   custom_params: any;
-  created_at: string;
-};
-
-type Client = {
-  id: string;
-  fullname: string;
 };
 
 type CarAddPopupProps = {
@@ -43,7 +33,8 @@ type CarAddPopupProps = {
 
 const CarAddPopup: React.FC<CarAddPopupProps> = ({ open, onClose, onCarAdded }) => {
   const { t } = useTranslation("common");
-  const [car, setCar] = useState<NewCar>({
+
+  const initialCarState: NewCar = {
     manufacturer: "",
     model: "",
     reg_number: "",
@@ -53,31 +44,17 @@ const CarAddPopup: React.FC<CarAddPopupProps> = ({ open, onClose, onCarAdded }) 
     note: "",
     mileage: null,
     custom_params: {},
-    created_at: new Date().toISOString(),
-  });
+  };
 
-  const [clients, setClients] = useState<Client[]>([]);
+  const [car, setCar] = useState<NewCar>(initialCarState);
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const fetchedClients: Client[] = await getAllClients();
-        setClients(fetchedClients);
-      } catch (error) {
-        console.error(t("car.Add.errorLoadingClients"), error);
-      }
-    };
-
-    fetchClients();
-  }, []);
+  const handleClientSelect = (clientId: string) => {
+    setCar((prevCar) => ({ ...prevCar, client_id: clientId }));
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
-    setCar({ ...car, [name]: value });
-  };
-
-  const handleSelectChange = (event: SelectChangeEvent<string>) => {
-    setCar({ ...car, client_id: event.target.value });
+    setCar((prevCar) => ({ ...prevCar, [name]: value }));
   };
 
   const handleSave = async () => {
@@ -85,15 +62,20 @@ const CarAddPopup: React.FC<CarAddPopupProps> = ({ open, onClose, onCarAdded }) 
       await addCar(car);
       alert(t("car.Add.successMessage"));
       onCarAdded();
-      onClose();
+      handleClose();
     } catch (error) {
       console.error(t("car.Add.errorAddingCar"), error);
       alert(t("car.Add.errorSavingCar"));
     }
   };
 
+  const handleClose = () => {
+    setCar(initialCarState);
+    onClose();
+  };
+
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby="add-car-modal">
+    <Modal open={open} onClose={handleClose} aria-labelledby="add-car-modal">
       <Box
         sx={{
           maxWidth: 600,
@@ -136,22 +118,15 @@ const CarAddPopup: React.FC<CarAddPopupProps> = ({ open, onClose, onCarAdded }) 
             onChange={handleInputChange}
             fullWidth
           />
-          <FormControl fullWidth>
-            <InputLabel id="client-select-label">{t("car.Add.client")}</InputLabel>
-            <Select
-              labelId="client-select-label"
-              name="client_id"
-              value={car.client_id}
-              onChange={handleSelectChange}
-              label={t("car.Add.client")}
-            >
-              {clients.map((client) => (
-                <MenuItem key={client.id} value={client.id}>
-                  {client.fullname}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <ClientSearchSelect
+            onClientSelect={handleClientSelect}
+            placeholder={t("car.Add.clientSearchPlaceholder")}
+            currentClient={{
+              id: "",
+              fullname: "", 
+            }}
+          />
+          
           <TextField
             label={t("car.Add.year")}
             name="year"
@@ -181,7 +156,7 @@ const CarAddPopup: React.FC<CarAddPopupProps> = ({ open, onClose, onCarAdded }) 
             <Button variant="contained" onClick={handleSave}>
               {t("car.Add.save")}
             </Button>
-            <Button variant="outlined" onClick={onClose}>
+            <Button variant="outlined" onClick={handleClose}>
               {t("car.Add.cancel")}
             </Button>
           </Stack>

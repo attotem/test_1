@@ -1,7 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaBars, FaHome, FaUsers, FaUserTie, FaCarSide,FaWrench   } from "react-icons/fa";
+import {
+  FaBars,
+  FaHome,
+  FaUsers,
+  FaUserTie,
+  FaCarSide,
+  FaWrench,
+  FaPlus,
+  FaClipboardList,
+} from "react-icons/fa";
 import styles from "./Sidebar.module.scss";
 
 interface SidebarProps {
@@ -10,13 +19,26 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ onCollapse }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
+    if (isCollapsed) {
+      setIsServicesOpen(false); 
+    }
+  };
+
+  const toggleServicesMenu = () => {
+    if (!isCollapsed) {
+      setIsServicesOpen(!isServicesOpen);
+    }
   };
 
   useEffect(() => {
     onCollapse(isCollapsed);
+    if (isCollapsed) {
+      setIsServicesOpen(false); 
+    }
   }, [isCollapsed, onCollapse]);
 
   return (
@@ -24,6 +46,16 @@ const Sidebar: React.FC<SidebarProps> = ({ onCollapse }) => {
       <button className={styles.toggleButton} onClick={toggleSidebar}>
         <FaBars />
       </button>
+
+      <div className={styles.addWorkOrder}>
+        <Link href="/workOrders/add">
+          <button className={styles.addButton}>
+            <FaPlus className={styles.addIcon} />
+            {!isCollapsed && <span>Add Work Order</span>}
+          </button>
+        </Link>
+      </div>
+
       <nav className={styles.menu}>
         <ul>
           <li>
@@ -59,10 +91,44 @@ const Sidebar: React.FC<SidebarProps> = ({ onCollapse }) => {
             </Link>
           </li>
           <li>
-            <Link href="/services">
+            <div
+              className={`${styles.menuItem} ${styles.submenuToggle}`}
+              onClick={toggleServicesMenu}
+            >
+              <FaWrench className={styles.icon} />
+              {!isCollapsed && (
+                <div className={styles.serviceContainer}>
+                  <span className={styles.menuText}>Services</span>
+                  <span className={styles.submenuArrow}>
+                    {isServicesOpen ? "▲" : "▼"}
+                  </span>
+                </div>
+              )}
+            </div>
+            {!isCollapsed && isServicesOpen && (
+              <ul className={styles.submenu}>
+                <li>
+                  <Link href="/services/complex">
+                    <div className={styles.submenuItem}>
+                      <span>Complex Services</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/services/regular">
+                    <div className={styles.submenuItem}>
+                      <span>Regular Services</span>
+                    </div>
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </li>
+          <li>
+            <Link href="/workOrders">
               <div className={styles.menuItem}>
-                <FaWrench   className={styles.icon} />
-                <span className={styles.menuText}>Services</span>
+                <FaClipboardList className={styles.icon} />
+                <span className={styles.menuText}>All Work Orders</span>
               </div>
             </Link>
           </li>

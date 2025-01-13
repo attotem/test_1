@@ -34,31 +34,16 @@ const AddWorkOrderPopup: React.FC<AddWorkOrderPopupProps> = ({ isOpen, onClose, 
       if (car_id) {
         setFormData((prev) => ({ ...prev, car_id: car_id as string })); 
       }
-      fetchClients();
     }
   }, [isOpen, car_id]);
 
-  const fetchClients = async () => {
-    setLoading(true);
-    try {
-      const data = await getAllClients();
-      setClients(data);
-    } catch (error) {
-      console.error("Error fetching clients:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const handleInputChange = (key: string, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = async () => {
-    // if (new Date(formData.start_at) >= new Date(formData.end_at)) {
-    //   alert(t("startAtShouldBeBeforeEndAt"));
-    //   return;
-    // }
     try {
       await addWorkOrder(formData);
       alert(t("workOrderAddedSuccessfully"));
@@ -94,9 +79,9 @@ const AddWorkOrderPopup: React.FC<AddWorkOrderPopupProps> = ({ isOpen, onClose, 
           value={formData.car_id}
           onChange={(e) => handleInputChange("car_id", e.target.value)}
           sx={{ marginBottom: 2 }}
-          disabled // Disable editing as it's pre-filled from the URL
+          disabled 
         />
-        <TextField
+        {/* <TextField
           select
           fullWidth
           label={t("client")}
@@ -115,7 +100,7 @@ const AddWorkOrderPopup: React.FC<AddWorkOrderPopupProps> = ({ isOpen, onClose, 
               </MenuItem>
             ))
           )}
-        </TextField>
+        </TextField> */}
         <TextField
           fullWidth
           label={t("comment")}

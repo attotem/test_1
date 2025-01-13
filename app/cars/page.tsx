@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { FaTrash } from "react-icons/fa";
 import TableTemplate from "../../components/TableTemplate/TableTemplate";
 import Header from "../../components/header/header";
+import Pagination from "../../components/Pagination/Pagination"
 import CarAddPopup from "./CarAddPopup";
 import { useTranslation } from "react-i18next";
 
@@ -25,20 +26,26 @@ const CarsPage: React.FC = () => {
   const { t } = useTranslation("common");
   const [cars, setCars] = useState<Car[]>([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(10);
+  const limit = 3; 
   const router = useRouter();
 
-  const fetchCars = async () => {
+  const fetchCars = async (page: number) => {
     try {
-      const fetchedCars: Car[] = await getCars();
-      setCars(fetchedCars);
+      const offset = (page - 1) * limit;
+      const response = await getCars(limit, offset); 
+      setCars(response); 
+      // setTotalRecords(response.total);
     } catch (error) {
       console.error("Error fetching cars:", error);
     }
   };
 
   useEffect(() => {
-    fetchCars();
-  }, []);
+    fetchCars(currentPage);
+  }, [currentPage]);
 
   const handleDeleteCar = async (id: string) => {
     const confirmation = confirm(t("car.List.delete"));
@@ -46,7 +53,7 @@ const CarsPage: React.FC = () => {
 
     try {
       await deleteCar(id);
-      setCars((prevCars) => prevCars.filter((car) => car.id !== id));
+      fetchCars(currentPage); 
       alert(t("car.List.deletedSuccessfully"));
     } catch (error) {
       console.error("Error deleting car:", error);
@@ -56,7 +63,7 @@ const CarsPage: React.FC = () => {
 
   const handlePopupClose = () => {
     setIsPopupOpen(false);
-    fetchCars();
+    fetchCars(currentPage); 
   };
 
   const renderRow = (car: Car) => (
@@ -102,7 +109,11 @@ const CarsPage: React.FC = () => {
         data={cars}
         renderRow={renderRow}
         title={t("car.List.title")}
-        addPath="cars/add"
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(totalRecords / limit)} 
+        onPageChange={(page) => setCurrentPage(page)} 
       />
       <CarAddPopup
         open={isPopupOpen}

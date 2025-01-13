@@ -5,23 +5,19 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 i18n
   .use(Backend)
-  .use(LanguageDetector)
+  // .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'en',
+    fallbackLng: 'en', 
     debug: true,
+    supportedLngs: ['en', 'ru'], 
+    nonExplicitSupportedLngs: true, 
     interpolation: {
-      escapeValue: false,
+      escapeValue: false, 
     },
     backend: {
-      loadPath: '/locales/{{lng}}/common.json',
+      loadPath: '/locales/{{lng}}/common.json', 
     },
-  })
-  .then(() => {
-    console.log('i18next initialized');
-  })
-  .catch((err) => {
-    console.error('i18next failed to initialize', err);
   });
 
 export default i18n;

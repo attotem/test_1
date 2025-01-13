@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { addService } from "../../components/http";
+import { addService } from "../../../components/http";
 import {
   Modal,
   Box,

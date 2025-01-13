@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import Sidebar from "./sideBar";
 import { useState } from "react";
-import { I18nextProvider } from "react-i18next";  // Import I18nextProvider
-import i18n from "../../public/i18n";  // Import your i18n instance
+import { I18nextProvider } from "react-i18next";  
+import i18n from "../../public/i18n";  
 
 export default function SidebarLayout({
   children,

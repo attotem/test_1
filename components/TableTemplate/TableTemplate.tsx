@@ -8,10 +8,9 @@ type TableTemplateProps = {
   data: any[];
   renderRow: (item: any) => JSX.Element;
   title: string;
-  addPath: string;
 };
 
-const TableTemplate: React.FC<TableTemplateProps> = ({ headers, data, renderRow, title, addPath }) => {
+const TableTemplate: React.FC<TableTemplateProps> = ({ headers, data, renderRow, title }) => {
   return (
     <div className={styles.tablePage}>
 
@@ -33,7 +32,7 @@ const TableTemplate: React.FC<TableTemplateProps> = ({ headers, data, renderRow,
             ) : (
               <tr>
                 <td colSpan={headers.length + 1} className={styles.noDataCell}>
-                  Нет данных
+                  -
                 </td>
               </tr>
             )}
