@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 "use client";
 import { useState } from "react";
 import AuthForm from "../../components/AuthForm";
