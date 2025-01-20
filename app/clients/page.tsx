@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -9,7 +7,7 @@ import TableTemplate from "../../components/TableTemplate/TableTemplate";
 import ClientAddPopup from "./ClientAddPopup";
 import Header from "../../components/header/header";
 import TagSelector from "./TagSelector";
-import Pagination from "@/components/Pagination/pagination";
+import Pagination from "../../components/Pagination/Pagination"
 import { useTranslation } from "react-i18next";
 import { Box } from "@mui/material";
 

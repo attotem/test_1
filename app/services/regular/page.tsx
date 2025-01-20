@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -8,7 +6,7 @@ import { FaTrash } from "react-icons/fa";
 import Header from "@/components/header/header";
 import TableTemplate from "@/components/TableTemplate/TableTemplate";
 import ServiceAddPopup from "./ServiceAddPopup";
-import Pagination from "@/components/Pagination/pagination";
+import Pagination from "../../../components/Pagination/Pagination"
 import { getAllServices, deleteService } from "../../../components/http";
 
 type Service = {
